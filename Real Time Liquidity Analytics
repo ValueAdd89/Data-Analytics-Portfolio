@@ -1,4 +1,10 @@
                                                                                         💸 Real-Time Liquidity Management Platform
+##Index
+
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+
 
 This project demonstrates an end-to-end system for monitoring, analyzing, and optimizing liquidity in financial transactions using both SQL and Python. It integrates batch and real-time data processing to ensure efficient cash flow management and provides actionable insights for decision-making.
 
