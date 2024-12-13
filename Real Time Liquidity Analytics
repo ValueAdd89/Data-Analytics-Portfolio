@@ -1,17 +1,4 @@
-                                                                                  # Real-Time Liquidity Management Platform
-
-Welcome to the Real-Time Liquidity Management Platform! This README contains details about the project setup, architecture, and features.
-
----
-
-## Index
-- [Overview](#project-objectives)
-- [Tech Stack](#proposed-tech-stack)
-- [Features](#features)
-- [SQL Scripts](#sql-scripts)
-- [Python Scripts](#python-scripts)
-- [Visualization](#visualization)
-- [How the workflow would run in the real world](#how-the-workflow-would-run-in-the-real-world)
+                                                                                  Real-Time Liquidity Management Platform
 
 
 This project demonstrates an end-to-end system for monitoring, analyzing, and optimizing liquidity in financial transactions using both SQL and Python. It integrates batch and real-time data processing to ensure efficient cash flow management and provides actionable insights for decision-making.
