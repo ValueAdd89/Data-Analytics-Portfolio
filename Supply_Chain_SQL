@@ -1,0 +1,134 @@
+                                                                                                                              📦 Supply Chain Dynamic Pivot Query
+
+🚀 Purpose
+
+This query helps supply chain managers and analysts:
+
+* Transform rows of product prices into dynamic columns for specific months.
+* Calculate critical supply chain metrics such as On-Time Delivery Rate (OTD) and Inventory Turnover Ratio to assess and optimize performance.
+
+🛠️ Features
+
+Dynamic Month Pivoting:
+
+  * Automatically pivots product prices for the last two months into columns using Snowflake’s PIVOT function.
+
+  * Dynamically adapts to changes in the dataset.
+
+Key Supply Chain Metrics:
+
+On-Time Delivery Rate (OTD): 
+  Percentage of deliveries made on time to track logistics efficiency.
+  Inventory Turnover Ratio: Measures how effectively inventory is being utilized.
+
+Modular and Scalable:
+
+Designed to handle large datasets with minimal manual intervention.
+Easily extendable to include additional metrics or broader date ranges.
+
+📊 Metrics Explained
+
+On-Time Delivery Rate (OTD):
+
+  Formula:
+  
+  𝑂𝑇𝐷 = On-Time Deliveries/Total Deliveries× 100
+  
+  Indicates logistics reliability.
+
+Inventory Turnover Ratio:
+
+Formula:
+  Inventory Turnover Ratio = Cost of Goods Sold (COGS) / Average Inventory Value
+  
+  Reflects inventory efficiency.
+
+💡 How It Works
+
+  Dynamic Date Pivot:
+  
+    Uses LISTAGG to generate a dynamic list of months for pivoting.
+    
+    Snowflake’s PIVOT function creates columns for each month dynamically.
+
+Integrated Metrics:
+
+Metrics are calculated in a secondary CTE (SupplyChainMetrics) for reusability and clarity.
+
+📜 Query Structure
+
+-- Step 1: Dynamically retrieve distinct months for pivot
+DECLARE month_list STRING;
+
+-- Aggregate distinct months as a comma-separated list for pivoting
+SELECT LISTAGG(QUOTE(TRIM(Month)) || ' AS ' || REPLACE(TO_CHAR(Month, 'MON_YYYY'), '-', '_'), ', ') AS pivot_clause
+INTO month_list
+FROM (
+    SELECT DISTINCT TO_DATE(Month, 'YYYY-MM-DD') AS Month
+    FROM ProductPricing
+    WHERE Month >= CURRENT_DATE - INTERVAL '2 MONTH' -- Consider last 2 months
+);
+
+-- Step 2: Build and execute the dynamic SQL
+DECLARE sql_query STRING;
+
+-- Construct the pivot query
+SET sql_query = '
+WITH PivotedFuturePrices AS (
+    SELECT *
+    FROM ProductPricing
+    PIVOT (
+        MAX(FuturePrice) AS Price
+        FOR Month IN (' || month_list || ')
+    )
+),
+SupplyChainMetrics AS (
+    SELECT 
+        p.ProductID,
+        p.ProductName,
+        ' || month_list || ', -- Dynamically added pivoted columns
+        -- On-Time Delivery Rate (OTD): (On-time deliveries / Total deliveries) * 100
+        (SUM(CASE WHEN s.DeliveryStatus = ''On-Time'' THEN 1 ELSE 0 END) * 100.0 / COUNT(s.DeliveryID)) AS OnTimeDeliveryRate,
+        -- Inventory Turnover Ratio: COGS / Average Inventory
+        (SUM(s.CostOfGoodsSold) / NULLIF(AVG(s.InventoryValue), 0)) AS InventoryTurnoverRatio
+    FROM 
+        PivotedFuturePrices p
+    JOIN SupplyChain s
+        ON p.ProductID = s.ProductID
+    WHERE 
+        s.Month >= CURRENT_DATE - INTERVAL ''2 MONTH'' -- Match date range with pivot
+    GROUP BY 
+        p.ProductID, p.ProductName
+)
+SELECT *
+FROM SupplyChainMetrics
+ORDER BY ProductID;
+';
+
+-- Execute the dynamic SQL
+EXECUTE IMMEDIATE :sql_query;
+
+
+
+
+📈 Example Output
+ProductID	ProductName	Jan_2024_Price	Feb_2024_Price	OnTimeDeliveryRate	InventoryTurnoverRatio
+    1	      Widget A	  10.50	            10.75	          95.00	                    4.50
+    2	      Widget B	  15.00	            15.25	          90.00	                    5.25
+
+🛠 Prerequisites
+  Database: Snowflake
+
+  Tables:
+    ProductPricing: Contains product prices by month.
+    SupplyChain: Includes delivery and inventory data.
+
+  User Permissions:
+
+  Ability to create and execute dynamic SQL statements.
+
+📬 Feedback and Contributions
+
+If you have questions, suggestions, or would like to contribute, feel free to open an issue or submit a pull request. Let's optimize supply chain analytics together!
+
+Thank you for visiting! 🎉
