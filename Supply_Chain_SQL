@@ -1,10 +1,11 @@
-                                                                                                                              📦 Supply Chain Dynamic Pivot Query
+                                                                                📦 Supply Chain Dynamic Pivot Query
 
 🚀 Purpose
 
 This query helps supply chain managers and analysts:
 
 * Transform rows of product prices into dynamic columns for specific months.
+
 * Calculate critical supply chain metrics such as On-Time Delivery Rate (OTD) and Inventory Turnover Ratio to assess and optimize performance.
 
 🛠️ Features
@@ -18,30 +19,36 @@ Dynamic Month Pivoting:
 Key Supply Chain Metrics:
 
 On-Time Delivery Rate (OTD): 
-  Percentage of deliveries made on time to track logistics efficiency.
-  Inventory Turnover Ratio: Measures how effectively inventory is being utilized.
+
+  * Percentage of deliveries made on time to track logistics efficiency.
+
+Inventory Turnover Ratio: 
+
+  * Measures how effectively inventory is being utilized.
 
 Modular and Scalable:
 
 Designed to handle large datasets with minimal manual intervention.
+
 Easily extendable to include additional metrics or broader date ranges.
 
 📊 Metrics Explained
 
-On-Time Delivery Rate (OTD):
+* On-Time Delivery Rate (OTD):
 
-  Formula:
+    - Formula:
   
-  𝑂𝑇𝐷 = On-Time Deliveries/Total Deliveries× 100
+      𝑂𝑇𝐷 = On-Time Deliveries/Total Deliveries× 100
   
-  Indicates logistics reliability.
+    - Indicates logistics reliability.
 
-Inventory Turnover Ratio:
+* Inventory Turnover Ratio:
 
 Formula:
-  Inventory Turnover Ratio = Cost of Goods Sold (COGS) / Average Inventory Value
+
+  * Inventory Turnover Ratio = Cost of Goods Sold (COGS) / Average Inventory Value
   
-  Reflects inventory efficiency.
+  * Reflects inventory efficiency.
 
 💡 How It Works
 
@@ -58,6 +65,7 @@ Metrics are calculated in a secondary CTE (SupplyChainMetrics) for reusability a
 📜 Query Structure
 
 -- Step 1: Dynamically retrieve distinct months for pivot
+
 DECLARE month_list STRING;
 
 -- Aggregate distinct months as a comma-separated list for pivoting
@@ -74,11 +82,17 @@ DECLARE sql_query STRING;
 
 -- Construct the pivot query
 SET sql_query = '
+
 WITH PivotedFuturePrices AS (
+
     SELECT *
+
     FROM ProductPricing
+
     PIVOT (
+
         MAX(FuturePrice) AS Price
+
         FOR Month IN (' || month_list || ')
     )
 ),
