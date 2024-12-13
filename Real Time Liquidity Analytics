@@ -1,16 +1,22 @@
-                                                                                        💸 Real-Time Liquidity Management Platform
+                                                                                  # Real-Time Liquidity Management Platform
 
-                                                                                                      ##Index
-                                                                                                      
-                                                                                          [Project Objectives](#project-objectives)
-                                                                                          [Tech Stack](#proposed-tech-stack)
-                                                                                          [Features](#features)
+Welcome to the Real-Time Liquidity Management Platform! This README contains details about the project setup, architecture, and features.
 
+---
+
+## Index
+- [Overview](#project-objectives)
+- [Tech Stack](#proposed-tech-stack)
+- [Features](#features)
+- [SQL Scripts](#sql-scripts)
+- [Python Scripts](#python-scripts)
+- [Visualization](#visualization)
+- [How the workflow would run in the real world](#how-the-workflow-would-run-in-the-real-world)
 
 
 This project demonstrates an end-to-end system for monitoring, analyzing, and optimizing liquidity in financial transactions using both SQL and Python. It integrates batch and real-time data processing to ensure efficient cash flow management and provides actionable insights for decision-making.
 
-##🎯 Project Objectives
+🎯 ## Project Objectives
 
   Real-Time Liquidity Monitoring: Capture and process financial transaction data in real time to track cash flow across accounts.
 
@@ -18,7 +24,7 @@ This project demonstrates an end-to-end system for monitoring, analyzing, and op
 
   Actionable Insights: Generate alerts and recommendations based on liquidity thresholds using Python.
 
-##⚙️ Proposed Tech Stack
+⚙️ ## Proposed Tech Stack
 
   SQL: For data storage, transformations, and analytics (Snowflake or PostgreSQL)
 
@@ -30,7 +36,7 @@ This project demonstrates an end-to-end system for monitoring, analyzing, and op
 
   Visualization: Dash or Power BI for liquidity dashboards
 
-##📜 Features
+📜 ## Features
 
 1. Data Ingestion
 
@@ -84,7 +90,7 @@ If a threshold breach is detected, the system suggests automated actions such as
   
   * Batch tasks like SQL transformations or daily summaries execute on predefined schedules.
 
-## 📊 Example Dataset
+📊 ## Example Dataset
 
 Sample Transaction Data (transactions.csv):
 
@@ -93,7 +99,7 @@ TransactionID	AccountID	TransactionType	Amount	      Timestamp
       2	        101	      Debit	        -500.00	    2023-01-01 10:15:00
       3	        102	      Credit	      1500.00	     2023-01-01 10:20:00
 
-## 📂 SQL Scripts
+📂## SQL Scripts
 
 1. Real-Time Balance Calculation (real_time_balance.sql)
 
@@ -124,7 +130,7 @@ SELECT
     (TotalInflows - TotalOutflows) AS NetLiquidity
 FROM AggregatedData;
 
-## 📂 Python Scripts
+📂 ## Python Scripts
 
 1. Transaction Streaming (kafka_producer.py)
 
@@ -161,15 +167,17 @@ alerts = data[data['RunningBalance'] < 1000]
 for _, row in alerts.iterrows():
     print(f"ALERT: Account {row['AccountID']} has low balance: ${row['RunningBalance']:.2f}")
 
-## 📊 Visualization
+📊 ## Visualization
 
 Run dashboard.py to launch a real-time liquidity dashboard. Example dashboard includes:
 
-Account Balances: Real-time visualization of balances by account.
-Liquidity Trends: Line chart of inflows and outflows.
-Alert Panel: Highlight accounts below threshold.
+  * Account Balances: Real-time visualization of balances by account.
+  
+  * Liquidity Trends: Line chart of inflows and outflows.
+  
+  * Alert Panel: Highlight accounts below threshold.
 
-## 🚀 How the workflow would run in the real world 
+🚀 ## How the workflow would run in the real world 
 
 1. Transaction Processing:
 
